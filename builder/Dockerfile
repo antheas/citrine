@@ -14,7 +14,7 @@ RUN git submodule update --init; \
     ./autogen.sh --prefix=/usr --libdir=/usr/lib64 --sysconfdir=/etc; \
     make;
 
-RUN dnf install -y skopeo just git jq selinux-policy-targeted make
+RUN dnf install -y skopeo just git jq selinux-policy-targeted make bubblewrap
 RUN dnf install -y python3 python3-pip python3-devel
 RUN make install
 
