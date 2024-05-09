@@ -5,7 +5,7 @@
 # Set a default for some recipes
 default_variant := "citrine"
 # Current default in Pungi
-force_nocache := "true"
+force_nocache := "false"
 
 # Comps-sync, but without pulling latest
 sync:

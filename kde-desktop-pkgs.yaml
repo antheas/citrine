@@ -43,8 +43,6 @@ packages:
   - kwin
   - kwrite
   - libappindicator-gtk3
-  - mesa-dri-drivers
-  - mesa-vulkan-drivers
   - pam-kwallet
   - phonon-qt6-backend-vlc
   - pinentry-qt

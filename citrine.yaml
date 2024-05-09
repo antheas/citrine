@@ -1,11 +1,18 @@
-include: kde-desktop-pkgs.yaml
-ref: fedora/40/${basearch}/citrine
+include: 
+  - kde-desktop-pkgs.yaml
+  - pkgs-ublue.yaml
+  - pkgs-bazzite.yaml
+
+ref: citrine/40/${basearch}/citrine
 rojig:
   name: citrine
   summary: "Citrine"
   license: MIT
 
 packages:
+  #
+  # Upstream Kinoite deps
+  #
   - fedora-release-kinoite
   # Install some minor optional tools for KInfoCenter
   - vulkan-tools
@@ -23,9 +30,26 @@ packages:
   # Install gdb to make getting backtraces work with DrKonqi
   # The dnf dependency is excluded in the common manifest
   - gdb
+  #
+  # Bazzite
+  #
+  # Freeword
+  - mesa-va-drivers-freeworld
+  - mesa-vdpau-drivers-freeworld.x86_64
+  # New packages
 
+repo-packages:
+  - repo: hhd
+    packages:
+      - hhd
+      - hhd-ui
+      - adjustor
+      
 # Make sure the following are not pulled in when Recommended by other packages
 exclude-packages:
+  #
+  # Upstream Kinoite exclusions
+  #
   - plasma-discover-offline-updates
   - plasma-discover-packagekit
   - plasma-pk-updates
@@ -41,3 +65,14 @@ exclude-packages:
 repos:
   - fedora-40
   - fedora-40-updates
+  - hhd
+  # - bazzite
+  - bazzite-multilib
+  - bazzite-multilib:ml
+  - sentry
+  - sentry-switcheroo
+  - rpmfusion-free
+  - rpmfusion-free-updates
+  - rpmfusion-nonfree
+  - rpmfusion-nonfree-updates
+  - rpmfusion-nonfree-steam

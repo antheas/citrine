@@ -1,0 +1,54 @@
+packages:
+  # Base
+  - alsa-firmware
+  # - android-udev-rules
+  - apr
+  - apr-util
+  - distrobox
+  - ffmpeg
+  - ffmpeg-libs
+  - ffmpegthumbnailer
+  - fzf
+  - google-noto-sans-balinese-fonts
+  - google-noto-sans-cjk-fonts
+  - google-noto-sans-javanese-fonts
+  - google-noto-sans-sundanese-fonts
+  - grub2-tools-extra
+  - heif-pixbuf-loader
+  - htop
+  - intel-media-driver
+  - just
+  - kernel-tools
+  - libheif-freeworld
+  - libheif-tools
+  - libratbag-ratbagd
+  - libva-intel-driver
+  - libva-utils
+  - lshw
+  # - mesa-va-drivers-freeworld.x86_64 # bazzite includes
+  - net-tools
+  - nvme-cli
+  - nvtop
+  - openrgb-udev-rules
+  - openssl
+  # - oversteer-udev
+  - pam-u2f
+  - pam_yubico
+  - pamu2fcfg
+  - pipewire-codec-aptx
+  - powerstat
+  - smartmontools
+  - solaar-udev
+  - symlinks
+  - tcpdump
+  - tmux
+  - traceroute
+  - vim
+  - wireguard-tools
+  # - zst
+  # Kinoite
+  - icoutils
+  - kate
+  - kcron
+  - kio-admin
+  - ksshaskpass

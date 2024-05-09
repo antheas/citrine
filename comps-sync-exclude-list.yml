@@ -123,3 +123,7 @@ desktop_exclude_list:
     # Remove initial-setup from Kinoite
     # See: https://fedoraproject.org/wiki/Changes/KDERemoveInitialSetup
     - initial-setup-gui
+  base-graphical:
+    # Provided by bazzite-multilib
+    - mesa-dri-drivers
+    - mesa-vulkan-drivers

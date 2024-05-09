@@ -1,0 +1,72 @@
+[hhd]
+name=Copr repo for hhd-dev/hhd
+baseurl=https://download.copr.fedorainfracloud.org/results/hhd-dev/hhd/fedora-$releasever-$basearch/
+type=rpm-md
+skip_if_unavailable=True
+gpgcheck=1
+gpgkey=https://download.copr.fedorainfracloud.org/results/hhd-dev/hhd/pubkey.gpg
+repo_gpgcheck=0
+enabled=1
+enabled_metadata=1
+metadata_expire=1d
+
+[bazzite]
+name=Copr repo for bazzite owned by kylegospo
+baseurl=https://download.copr.fedorainfracloud.org/results/kylegospo/bazzite/fedora-$releasever-$basearch/
+type=rpm-md
+skip_if_unavailable=True
+gpgcheck=1
+gpgkey=https://download.copr.fedorainfracloud.org/results/kylegospo/bazzite/pubkey.gpg
+repo_gpgcheck=0
+enabled=0
+enabled_metadata=1
+metadata_expire=1d
+
+[bazzite-multilib]
+name=Copr repo for bazzite-multilib owned by kylegospo
+baseurl=https://download.copr.fedorainfracloud.org/results/kylegospo/bazzite-multilib/fedora-$releasever-$basearch/
+type=rpm-md
+skip_if_unavailable=True
+gpgcheck=1
+gpgkey=https://download.copr.fedorainfracloud.org/results/kylegospo/bazzite-multilib/pubkey.gpg
+repo_gpgcheck=0
+enabled=0
+enabled_metadata=1
+metadata_expire=1d
+
+[bazzite-multilib:ml]
+name=Copr repo for bazzite-multilib owned by kylegospo (i386)
+baseurl=https://download.copr.fedorainfracloud.org/results/kylegospo/bazzite-multilib/fedora-$releasever-i386/
+type=rpm-md
+skip_if_unavailable=True
+gpgcheck=1
+gpgkey=https://download.copr.fedorainfracloud.org/results/kylegospo/bazzite-multilib/pubkey.gpg
+repo_gpgcheck=0
+cost=1100
+enabled=0
+enabled_metadata=1
+metadata_expire=1d
+
+[sentry]
+name=Copr repo for kernel-fsync owned by sentry
+baseurl=https://download.copr.fedorainfracloud.org/results/sentry/kernel-fsync/fedora-$releasever-$basearch/
+type=rpm-md
+skip_if_unavailable=True
+gpgcheck=1
+gpgkey=https://download.copr.fedorainfracloud.org/results/sentry/kernel-fsync/pubkey.gpg
+repo_gpgcheck=0
+enabled=1
+enabled_metadata=1
+metadata_expire=1d
+
+[sentry-switcheroo]
+name=Copr repo for switcheroo-control_discrete owned by sentry
+baseurl=https://download.copr.fedorainfracloud.org/results/sentry/switcheroo-control_discrete/fedora-$releasever-$basearch/
+type=rpm-md
+skip_if_unavailable=True
+gpgcheck=1
+gpgkey=https://download.copr.fedorainfracloud.org/results/sentry/switcheroo-control_discrete/pubkey.gpg
+repo_gpgcheck=0
+enabled=0
+enabled_metadata=1
+metadata_expire=1d

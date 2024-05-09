@@ -1,0 +1,95 @@
+repo-packages:
+  # Kernel
+  - repo: sentry
+    packages:
+      - kernel
+      - kernel-core
+      - kernel-modules
+      - kernel-modules-core
+      - kernel-modules-extra
+      - kernel-uki-virt
+      - kernel-headers
+      - kernel-devel
+  # Steam support
+  - repo: bazzite-multilib
+    packages:
+      - mesa-filesystem
+      - mesa-libxatracker
+      - mesa-libglapi
+      - mesa-dri-drivers
+      - mesa-libgbm
+      - mesa-libEGL
+      - mesa-vulkan-drivers
+      - mesa-libGL
+      - pipewire
+      - pipewire-alsa
+      - pipewire-gstreamer
+      - pipewire-jack-audio-connection-kit
+      - pipewire-jack-audio-connection-kit-libs
+      - pipewire-libs
+      - pipewire-pulseaudio
+      - pipewire-utils
+  - repo: sentry-switcheroo
+    packages:
+      - switcheroo-control
+  - repo: rpmfusion-nonfree-steam
+    packages:
+      - steam
+
+packages:
+  # New packages
+  # - discover-overlay
+  - python3-pip
+  - libadwaita
+  - duperemove
+  - sqlite
+  - xwininfo
+  # - xrandr
+  - compsize
+  - input-remapper
+  # - system76-scheduler
+  - powertop
+  - i2c-tools
+  - udica
+  # - joycond
+  - ladspa-caps-plugins
+  # - ladspa-noise-suppression-for-voice
+  - python3-icoextract
+  # - tailscale
+  # - webapp-manager
+  - btop
+  - fish
+  - lshw
+  - xdotool
+  - wmctrl
+  - libcec
+  - yad
+  - f3
+  - pulseaudio-utils
+  - unrar
+  - lzip
+  - libxcrypt-compat
+  - mesa-libGLU
+  - vulkan-tools
+  - glibc.i686
+  - extest.i686
+  # - xwiimote-ng
+  - twitter-twemoji-fonts
+  - google-noto-sans-cjk-fonts
+  - lato-fonts
+  - fira-code-fonts
+  # - nerd-fonts
+  - fastfetch
+  # - glow
+  # - gum
+  - vim
+  - zoxide
+  - setools
+  - setroubleshoot
+  - cockpit-networkmanager
+  - cockpit-podman
+  - cockpit-selinux
+  - cockpit-system
+  - cockpit-navigator
+  - cockpit-storaged
+  - lsb_release
