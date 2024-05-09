@@ -150,4 +150,4 @@ if __name__ == "__main__":
                 count += pyc_set_zero_mtime(path)
 
     print(f"Processed {count} pyc files")
-' | python
+' | python3
