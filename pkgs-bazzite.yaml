@@ -7,7 +7,8 @@ repo-packages:
       - kernel-modules
       - kernel-modules-core
       - kernel-modules-extra
-      - kernel-uki-virt
+      # - kernel-uki-virt # FIXME: Find out why it does not like ostree repos
+      # Post install script fails. Bazzite does not use a unified image, unsure why it is included.
       - kernel-headers
       - kernel-devel
   # Steam support
