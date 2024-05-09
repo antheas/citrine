@@ -1,0 +1,105 @@
+[bazzite]
+name=Copr repo for bazzite owned by kylegospo
+baseurl=https://download.copr.fedorainfracloud.org/results/kylegospo/bazzite/fedora-$releasever-$basearch/
+type=rpm-md
+skip_if_unavailable=True
+gpgcheck=1
+gpgkey=https://download.copr.fedorainfracloud.org/results/kylegospo/bazzite/pubkey.gpg
+repo_gpgcheck=0
+enabled=0
+enabled_metadata=1
+metadata_expire=1d
+
+[bazzite-multilib]
+name=Copr repo for bazzite-multilib owned by kylegospo
+baseurl=https://download.copr.fedorainfracloud.org/results/kylegospo/bazzite-multilib/fedora-$releasever-$basearch/
+type=rpm-md
+skip_if_unavailable=True
+gpgcheck=1
+gpgkey=https://download.copr.fedorainfracloud.org/results/kylegospo/bazzite-multilib/pubkey.gpg
+repo_gpgcheck=0
+enabled=0
+enabled_metadata=1
+metadata_expire=1d
+
+[bazzite-multilib:ml]
+name=Copr repo for bazzite-multilib owned by kylegospo (i386)
+baseurl=https://download.copr.fedorainfracloud.org/results/kylegospo/bazzite-multilib/fedora-$releasever-i386/
+type=rpm-md
+skip_if_unavailable=True
+gpgcheck=1
+gpgkey=https://download.copr.fedorainfracloud.org/results/kylegospo/bazzite-multilib/pubkey.gpg
+repo_gpgcheck=0
+cost=1100
+enabled=0
+enabled_metadata=1
+metadata_expire=1d
+
+[kylegospo-latency-flex]
+name=Copr repo for LatencyFleX owned by kylegospo
+baseurl=https://download.copr.fedorainfracloud.org/results/kylegospo/LatencyFleX/fedora-$releasever-$basearch/
+type=rpm-md
+skip_if_unavailable=True
+gpgcheck=1
+gpgkey=https://download.copr.fedorainfracloud.org/results/kylegospo/LatencyFleX/pubkey.gpg
+repo_gpgcheck=0
+enabled=0
+enabled_metadata=1
+
+[kylegospo-vk_hdr_layer]
+name=Copr repo for vk_hdr_layer owned by kylegospo
+baseurl=https://download.copr.fedorainfracloud.org/results/kylegospo/vk_hdr_layer/fedora-$releasever-$basearch/
+type=rpm-md
+skip_if_unavailable=True
+gpgcheck=1
+gpgkey=https://download.copr.fedorainfracloud.org/results/kylegospo/vk_hdr_layer/pubkey.gpg
+repo_gpgcheck=0
+enabled=1
+enabled_metadata=1
+
+[kylegospo-vk_hdr_layer:ml]
+name=Copr repo for vk_hdr_layer owned by kylegospo (i386)
+baseurl=https://download.copr.fedorainfracloud.org/results/kylegospo/vk_hdr_layer/fedora-$releasever-i386/
+type=rpm-md
+skip_if_unavailable=True
+gpgcheck=1
+gpgkey=https://download.copr.fedorainfracloud.org/results/kylegospo/vk_hdr_layer/pubkey.gpg
+repo_gpgcheck=0
+cost=1100
+enabled=1
+enabled_metadata=1
+
+[sentry]
+name=Copr repo for kernel-fsync owned by sentry
+baseurl=https://download.copr.fedorainfracloud.org/results/sentry/kernel-fsync/fedora-$releasever-$basearch/
+type=rpm-md
+skip_if_unavailable=True
+gpgcheck=1
+gpgkey=https://download.copr.fedorainfracloud.org/results/sentry/kernel-fsync/pubkey.gpg
+repo_gpgcheck=0
+enabled=1
+enabled_metadata=1
+metadata_expire=1d
+
+[sentry-switcheroo]
+name=Copr repo for switcheroo-control_discrete owned by sentry
+baseurl=https://download.copr.fedorainfracloud.org/results/sentry/switcheroo-control_discrete/fedora-$releasever-$basearch/
+type=rpm-md
+skip_if_unavailable=True
+gpgcheck=1
+gpgkey=https://download.copr.fedorainfracloud.org/results/sentry/switcheroo-control_discrete/pubkey.gpg
+repo_gpgcheck=0
+enabled=0
+enabled_metadata=1
+metadata_expire=1d
+
+[audinux]
+name=Copr repo for audinux owned by ycollet
+baseurl=https://download.copr.fedorainfracloud.org/results/ycollet/audinux/fedora-$releasever-$basearch/
+type=rpm-md
+skip_if_unavailable=True
+gpgcheck=1
+gpgkey=https://download.copr.fedorainfracloud.org/results/ycollet/audinux/pubkey.gpg
+repo_gpgcheck=0
+enabled=1
+enabled_metadata=1
