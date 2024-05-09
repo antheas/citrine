@@ -1,7 +1,7 @@
 include: kde-desktop-pkgs.yaml
 ref: fedora/40/${basearch}/citrine
 rojig:
-  name: fedora-kde
+  name: citrine
   summary: "Citrine"
   license: MIT
 

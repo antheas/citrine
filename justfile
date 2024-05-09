@@ -3,16 +3,9 @@
 # infrastructure are run via Pungi in a Koji runroot.
 
 # Set a default for some recipes
-default_variant := "silverblue"
+default_variant := "citrine"
 # Current default in Pungi
 force_nocache := "true"
-
-# Default is to only validate the manifests
-all: validate
-
-# Basic validation to make sure the manifests are not completely broken
-validate:
-    ./ci/validate
 
 # Comps-sync, but without pulling latest
 sync:
@@ -24,7 +17,7 @@ sync:
     fi
 
     default_variant={{default_variant}}
-    version="$(rpm-ostree compose tree --print-only --repo=repo fedora-${default_variant}.yaml | jq -r '."mutate-os-release"')"
+    version="$(rpm-ostree compose tree --print-only --repo=repo ${default_variant}.yaml | jq -r '."mutate-os-release"')"
     ./comps-sync.py --save fedora-comps/comps-f${version}.xml.in
 
 # Sync the manifests with the content of the comps groups
@@ -42,7 +35,7 @@ comps-sync:
     fi
 
     default_variant={{default_variant}}
-    version="$(rpm-ostree compose tree --print-only --repo=repo fedora-${default_variant}.yaml | jq -r '."mutate-os-release"')"
+    version="$(rpm-ostree compose tree --print-only --repo=repo ${default_variant}.yaml | jq -r '."mutate-os-release"')"
     ./comps-sync.py --save fedora-comps/comps-f${version}.xml.in
 
 # Check if the manifests are in sync with the content of the comps groups
@@ -60,44 +53,14 @@ comps-sync-check:
     fi
 
     default_variant={{default_variant}}
-    version="$(rpm-ostree compose tree --print-only --repo=repo fedora-${default_variant}.yaml | jq -r '."mutate-os-release"')"
+    version="$(rpm-ostree compose tree --print-only --repo=repo ${default_variant}.yaml | jq -r '."mutate-os-release"')"
     ./comps-sync.py fedora-comps/comps-f${version}.xml.in
 
 # Output the processed manifest for a given variant (defaults to Silverblue)
 manifest variant=default_variant:
     #!/bin/bash
     set -euo pipefail
-
-    variant={{variant}}
-    case "${variant}" in
-        "silverblue")
-            variant_pretty="Silverblue"
-            ;;
-        "kinoite"|"kinoite-nightly"|"kinoite-beta")
-            variant_pretty="Kinoite"
-            ;;
-        "sericea")
-            variant_pretty="Sericea"
-            ;;
-        "onyx")
-            variant_pretty="Onyx"
-            ;;
-        "vauxite")
-            variant_pretty="Vauxite"
-            ;;
-        "lazurite")
-            variant_pretty="Lazurite"
-            ;;
-        "base")
-            variant_pretty="Base"
-            ;;
-        "*")
-            echo "Unknown variant"
-            exit 1
-            ;;
-    esac
-
-    rpm-ostree compose tree --print-only --repo=repo fedora-{{variant}}.yaml
+    rpm-ostree compose tree --print-only --repo=repo {{variant}}.yaml
 
 # Perform dependency resolution for a given variant (defaults to Silverblue)
 compose-dry-run variant=default_variant:
@@ -111,83 +74,10 @@ compose-dry-run variant=default_variant:
         popd > /dev/null || exit 1
     fi
 
-    rpm-ostree compose tree --unified-core --repo=repo --dry-run fedora-{{variant}}.yaml
+    rpm-ostree compose tree --unified-core --repo=repo --dry-run {{variant}}.yaml
 
 # Alias/shortcut for compose-image command
 compose variant=default_variant: (compose-image variant)
-
-# Compose a variant using the legacy non container path (defaults to Silverblue)
-compose-legacy variant=default_variant:
-    #!/bin/bash
-    set -euxo pipefail
-
-    variant={{variant}}
-    case "${variant}" in
-        "silverblue")
-            variant_pretty="Silverblue"
-            ;;
-        "kinoite"|"kinoite-nightly"|"kinoite-beta")
-            variant_pretty="Kinoite"
-            ;;
-        "sericea")
-            variant_pretty="Sericea"
-            ;;
-        "onyx")
-            variant_pretty="Onyx"
-            ;;
-        "vauxite")
-            variant_pretty="Vauxite"
-            ;;
-        "lazurite")
-            variant_pretty="Lazurite"
-            ;;
-        "base")
-            variant_pretty="Base"
-            ;;
-        "*")
-            echo "Unknown variant"
-            exit 1
-            ;;
-    esac
-
-    ./ci/validate > /dev/null || (echo "Failed manifest validation" && exit 1)
-
-    mkdir -p repo cache logs
-    if [[ ! -f "repo/config" ]]; then
-        pushd repo > /dev/null || exit 1
-        ostree init --repo . --mode=bare-user
-        popd > /dev/null || exit 1
-    fi
-    # Set option to reduce fsync for transient builds
-    ostree --repo=repo config set 'core.fsync' 'false'
-
-    buildid="$(date '+%Y%m%d.0')"
-    timestamp="$(date --iso-8601=sec)"
-    echo "${buildid}" > .buildid
-
-    version="$(rpm-ostree compose tree --print-only --repo=repo fedora-${variant}.yaml | jq -r '."mutate-os-release"')"
-    echo "Composing ${variant_pretty} ${version}.${buildid} ..."
-
-    ARGS="--repo=repo --cachedir=cache"
-    ARGS+=" --unified-core"
-    if [[ {{force_nocache}} == "true" ]]; then
-        ARGS+=" --force-nocache"
-    fi
-    CMD="rpm-ostree"
-    if [[ ${EUID} -ne 0 ]]; then
-        CMD="sudo rpm-ostree"
-    fi
-
-    ${CMD} compose tree ${ARGS} \
-        --add-metadata-string="version=${variant_pretty} ${version}.${buildid}" \
-        "fedora-${variant}.yaml" \
-            |& tee "logs/${variant}_${version}_${buildid}.${timestamp}.log"
-
-    if [[ ${EUID} -ne 0 ]]; then
-        sudo chown --recursive "$(id --user --name):$(id --group --name)" repo cache
-    fi
-
-    ostree summary --repo=repo --update
 
 # Compose an Ostree Native Container OCI image
 compose-image variant=default_variant:
@@ -196,34 +86,14 @@ compose-image variant=default_variant:
 
     variant={{variant}}
     case "${variant}" in
-        "silverblue")
-            variant_pretty="Silverblue"
-            ;;
-        "kinoite"|"kinoite-nightly"|"kinoite-beta")
-            variant_pretty="Kinoite"
-            ;;
-        "sericea")
-            variant_pretty="Sericea"
-            ;;
-        "onyx")
-            variant_pretty="Onyx"
-            ;;
-        "vauxite")
-            variant_pretty="Vauxite"
-            ;;
-        "lazurite")
-            variant_pretty="Lazurite"
-            ;;
-        "base")
-            variant_pretty="Base"
+        "citrine")
+            variant_pretty="Citrine"
             ;;
         "*")
             echo "Unknown variant"
             exit 1
             ;;
     esac
-
-    ./ci/validate > /dev/null || (echo "Failed manifest validation" && exit 1)
 
     mkdir -p repo cache
     if [[ ! -f "repo/config" ]]; then
@@ -238,7 +108,7 @@ compose-image variant=default_variant:
     timestamp="$(date --iso-8601=sec)"
     echo "${buildid}" > .buildid
 
-    version="$(rpm-ostree compose tree --print-only --repo=repo fedora-${variant}.yaml | jq -r '."mutate-os-release"')"
+    version="$(rpm-ostree compose tree --print-only --repo=repo ${variant}.yaml | jq -r '."mutate-os-release"')"
     echo "Composing ${variant_pretty} ${version}.${buildid} ..."
 
     ARGS="--cachedir=cache --initialize"
@@ -253,8 +123,8 @@ compose-image variant=default_variant:
 
     ${CMD} compose image ${ARGS} \
          --label="quay.expires-after=4w" \
-        "fedora-${variant}.yaml" \
-        "fedora-${variant}.ociarchive"
+        "${variant}.yaml" \
+        "${variant}.ociarchive"
 
 # Clean up everything
 clean-all:
@@ -269,14 +139,6 @@ clean-repo:
 clean-cache:
     rm -rf ./cache
 
-# Run from inside a container
-podman:
-    podman run --rm -ti --volume $PWD:/srv:rw --workdir /srv --privileged quay.io/fedora-ostree-desktops/buildroot
-
-# Update the container image
-podman-pull:
-    podman pull quay.io/fedora-ostree-desktops/buildroot
-
 # Build an ISO
 lorax variant=default_variant:
     #!/bin/bash
@@ -288,33 +150,8 @@ lorax variant=default_variant:
 
     variant={{variant}}
     case "${variant}" in
-        "silverblue")
-            variant_pretty="Silverblue"
-            volid_sub="SB"
-            ;;
-        "kinoite"|"kinoite-nightly"|"kinoite-beta")
-            variant_pretty="Kinoite"
-            volid_sub="Knt"
-            ;;
-        "sericea")
-            variant_pretty="Sericea"
-            volid_sub="Src"
-            ;;
-        "onyx")
-            variant_pretty="Onyx"
-            volid_sub="Onyx"
-            ;;
-        "vauxite")
-            variant_pretty="Vauxite"
-            volid_sub="Vxt"
-            ;;
-        "lazurite")
-            variant_pretty="Lazurite"
-            volid_sub="Lzr"
-            ;;
-        "base")
-            variant_pretty="Base"
-            volid_sub="Base"
+        "citrine")
+            variant_pretty="Citrine"
             ;;
         "*")
             echo "Unknown variant"
@@ -331,7 +168,7 @@ lorax variant=default_variant:
         popd > /dev/null || exit 1
     fi
 
-    version_number="$(rpm-ostree compose tree --print-only --repo=repo fedora-${variant}.yaml | jq -r '."mutate-os-release"')"
+    version_number="$(rpm-ostree compose tree --print-only --repo=repo ${variant}.yaml | jq -r '."mutate-os-release"')"
     if [[ "$(git rev-parse --abbrev-ref HEAD)" == "main" ]] || [[ -f "fedora-rawhide.repo" ]]; then
         version_pretty="Rawhide"
         version="rawhide"
@@ -405,26 +242,8 @@ upload-container variant=default_variant:
 
     variant={{variant}}
     case "${variant}" in
-        "silverblue")
-            variant_pretty="Silverblue"
-            ;;
-        "kinoite"|"kinoite-nightly"|"kinoite-beta")
-            variant_pretty="Kinoite"
-            ;;
-        "sericea")
-            variant_pretty="Sericea"
-            ;;
-        "onyx")
-            variant_pretty="Onyx"
-            ;;
-        "vauxite")
-            variant_pretty="Vauxite"
-            ;;
-        "lazurite")
-            variant_pretty="Lazurite"
-            ;;
-        "base")
-            variant_pretty="Base"
+        "citrine")
+            variant_pretty="Citrine"
             ;;
         "*")
             echo "Unknown variant"
@@ -445,7 +264,7 @@ upload-container variant=default_variant:
     if [[ "$(git rev-parse --abbrev-ref HEAD)" == "main" ]] || [[ -f "fedora-rawhide.repo" ]]; then
         version="rawhide"
     else
-        version="$(rpm-ostree compose tree --print-only --repo=repo fedora-${variant}.yaml | jq -r '."mutate-os-release"')"
+        version="$(rpm-ostree compose tree --print-only --repo=repo ${variant}.yaml | jq -r '."mutate-os-release"')"
     fi
 
     image="quay.io/fedora-ostree-desktops/${variant}"
@@ -464,12 +283,8 @@ upload-container variant=default_variant:
         git_commit="$(git rev-parse --short HEAD)"
     fi
 
-    skopeo login --username "${CI_REGISTRY_USER}" --password "${CI_REGISTRY_PASSWORD}" quay.io
-    # Copy fully versioned tag (major version, build date/id, git commit)
-    skopeo copy --retry-times 3 "oci-archive:fedora-${variant}.ociarchive" "docker://${image}:${version}.${buildid}.${git_commit}"
-    # Update "un-versioned" tag (only major version)
-    skopeo copy --retry-times 3 "docker://${image}:${version}.${buildid}.${git_commit}" "docker://${image}:${version}"
-    if [[ "${variant}" == "kinoite-nightly" ]]; then
-        # Update latest tag for kinoite-nightly only
-        skopeo copy --retry-times 3 "docker://${image}:${version}.${buildid}.${git_commit}" "docker://${image}:latest"
-    fi
+    # skopeo login --username "${CI_REGISTRY_USER}" --password "${CI_REGISTRY_PASSWORD}" quay.io
+    # # Copy fully versioned tag (major version, build date/id, git commit)
+    # skopeo copy --retry-times 3 "oci-archive:${variant}.ociarchive" "docker://${image}:${version}.${buildid}.${git_commit}"
+    # # Update "un-versioned" tag (only major version)
+    # skopeo copy --retry-times 3 "docker://${image}:${version}.${buildid}.${git_commit}" "docker://${image}:${version}"
