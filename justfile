@@ -133,11 +133,11 @@ clean-all:
 
 # Only clean the ostree repo
 clean-repo:
-    rm -rf ./repo
+    sudo rm -rf ./repo
 
 # Only clean the package and repo caches
 clean-cache:
-    rm -rf ./cache
+    sudo rm -rf ./cache
 
 # Build an ISO
 lorax variant=default_variant:

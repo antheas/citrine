@@ -30,13 +30,6 @@ packages:
   # Install gdb to make getting backtraces work with DrKonqi
   # The dnf dependency is excluded in the common manifest
   - gdb
-  #
-  # Bazzite
-  #
-  # Freeword
-  - mesa-va-drivers-freeworld
-  - mesa-vdpau-drivers-freeworld.x86_64
-  # New packages
 
 repo-packages:
   - repo: hhd
@@ -60,13 +53,17 @@ exclude-packages:
   # # Ensure we do not include X11 support
   # - plasma-x11
   # - plasma-workspace-x11
+  #
+  # Citrine
+  #
+  - ublue-update
 
 # Kept in the leaf manifest as they are overwritten by Pungi in composes
 repos:
   - fedora-40
   - fedora-40-updates
   - hhd
-  # - bazzite
+  - bazzite
   - bazzite-multilib
   - bazzite-multilib:ml
   - sentry

@@ -30,19 +30,31 @@ repo-packages:
       - pipewire-libs
       - pipewire-pulseaudio
       - pipewire-utils
+  - repo: bazzite-multilib:ml
+    packages:
+      - extest.i686
   - repo: sentry-switcheroo
     packages:
       - switcheroo-control
   - repo: rpmfusion-nonfree-steam
     packages:
       - steam
+  - repo: bazzite
+    packages:
+      - duperemove
+  - repo: rpmfusion-free
+    packages:
+      # Freeword
+      - mesa-va-drivers-freeworld
+      - mesa-vdpau-drivers-freeworld
+      - mesa-va-drivers-freeworld.i686
+      - mesa-vdpau-drivers-freeworld.i686
 
 packages:
   # New packages
   # - discover-overlay
   - python3-pip
   - libadwaita
-  - duperemove
   - sqlite
   - xwininfo
   # - xrandr
@@ -72,8 +84,6 @@ packages:
   - libxcrypt-compat
   - mesa-libGLU
   - vulkan-tools
-  - glibc.i686
-  - extest.i686
   # - xwiimote-ng
   - twitter-twemoji-fonts
   - google-noto-sans-cjk-fonts
