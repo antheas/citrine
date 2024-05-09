@@ -122,9 +122,9 @@ compose-image variant=default_variant:
     fi
 
     ${CMD} compose image ${ARGS} \
-         --label="quay.expires-after=4w" \
         "${variant}.yaml" \
         "${variant}.ociarchive"
+        #  --label="quay.expires-after=4w" \
 
 # Clean up everything
 clean-all:
