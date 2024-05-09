@@ -62,8 +62,8 @@ recommends: false
 
 # Kept in the leaf manifest as they are overwritten by Pungi in composes
 repos:
-  - fedora-40
-  - fedora-40-updates
+  - fedora
+  - fedora-updates
   - hhd
   - bazzite
   - bazzite-multilib
