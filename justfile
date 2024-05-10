@@ -75,7 +75,12 @@ compose-dry-run variant=default_variant:
         popd > /dev/null || exit 1
     fi
 
-    rpm-ostree compose tree --unified-core --repo=repo --dry-run {{variant}}.yaml
+    CMD="rpm-ostree"
+    if [[ ${EUID} -ne 0 ]]; then
+        CMD="sudo rpm-ostree"
+    fi
+
+    ${CMD} compose tree --unified-core --repo=repo --dry-run {{variant}}.yaml
 
 # Alias/shortcut for compose-image command
 compose variant=default_variant: (compose-image variant)
