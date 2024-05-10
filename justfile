@@ -5,7 +5,8 @@
 # Set a default for some recipes
 distro := "ametrine"
 default_variant := "ametrine"
-max_layers := "100"
+max_layers := "50"
+build_timestamp := "1715354581"
 
 # Comps-sync, but without pulling latest
 sync:
@@ -124,14 +125,6 @@ compose-image variant=default_variant:
     echo "${buildid}" > .buildid
     echo "--- Composing ${variant_pretty} ${version}.${buildid} to ${out_archive}"
 
-    # Cleanup working dir
-    CMD_RM="rm"
-    if [[ ${EUID} -ne 0 ]]; then
-        CMD_RM="sudo rm"
-    fi
-    ${CMD_RM} -rf ./sysroot
-    mkdir -p ./sysroot
-
     # To debug with gdb, use: gdb --args ...
     CMD="rpm-ostree"
     if [[ ${EUID} -ne 0 ]]; then
@@ -139,32 +132,46 @@ compose-image variant=default_variant:
     fi
 
     # Install the packages
-    ${CMD} compose install \
+    # These three commands are a destructured tree command
+    # but have overhead
+    # ${CMD} compose install \
+    #     --unified-core --cachedir=cache --repo=repo \
+    #     ${variant}.yaml ./sysroot
+    # ${CMD} compose postprocess \
+    #     --unified-core \
+    #     ./sysroot/rootfs ${variant}.yaml
+    # ${CMD} compose commit \
+    #     --repo=./repo --unified-core \
+    #     ${variant}.yaml ./sysroot/rootfs
+    # Just tree command
+    # Export source date epoch to improve determinism
+    export SOURCE_DATE_EPOCH={{build_timestamp}}
+    ${CMD} compose tree \
         --unified-core --cachedir=cache --repo=repo \
-        ${variant}.yaml ./sysroot
-    ${CMD} compose postprocess \
-        --unified-core \
-        ./sysroot/rootfs ${variant}.yaml
-    ${CMD} compose commit \
-        --repo=./repo --unified-core \
-        ${variant}.yaml ./sysroot/rootfs
-    
-    ARGS=""
-    if [[ -f "${variant}.prev.manifest.json" ]]; then
-        ARGS+="--previous-build-manifest ${variant}.prev.manifest.json"
+        ${variant}.yaml \
+        --write-commitid-to="interim.${variant}.commitid.txt" \
+        --write-composejson-to="interim.${variant}.compose.json"
+
+    # Reference previous manifest to avoid layer shifting
+    CE_ARGS=""
+    if [[ -f "interim.${variant}.manifest.json" ]]; then
+        CE_ARGS+="--previous-build-manifest interim.${variant}.manifest.json"
     fi
 
     # Create OCI archive
+    commitid=$(cat interim.${variant}.commitid.txt)
     ${CMD} compose container-encapsulate \
-        --repo repo {{distro}}/${version}/x86_64/${variant} \
-        --max-layers {{max_layers}} ${ARGS} \
+        --repo repo ${commitid} \
+        --max-layers {{max_layers}} ${CE_ARGS} \
         oci-archive:${out_archive}
     
-    # Pull manifest
-    skopeo inspect --raw oci-archive:${out_archive} > ${variant}.prev.manifest.json
+    # Save data for transparency
+    skopeo inspect --raw oci-archive:${out_archive} > interim.${variant}.manifest.json
     mkdir -p manifests
-    cp ${variant}.prev.manifest.json manifests/${out_fn}.manifest.json
-    echo "Wrote image manifest to ${out_fn}.manifest.json"
+    cp interim.${variant}.manifest.json manifests/${out_fn}.manifest.json
+    cp interim.${variant}.commitid.txt manifests/${out_fn}.commitid.txt
+    cp interim.${variant}.compose.json manifests/${out_fn}.compose.json
+    echo "Wrote image manifest to manifests/${out_fn}.manifest.json"
 
     rm -f ${variant}.ociarchive
     ln -s ${out_fn} ${variant}.ociarchive

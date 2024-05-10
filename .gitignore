@@ -11,3 +11,4 @@
 venv
 log*
 /manifests/
+interim.*
