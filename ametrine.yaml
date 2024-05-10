@@ -3,11 +3,11 @@ include:
   - pkgs-ublue.yaml
   - pkgs-bazzite.yaml
 
-ref: citrine/40/${basearch}/citrine
+ref: ametrine/${releasever}/${basearch}/ametrine
 rojig:
-  name: citrine
-  summary: "Citrine"
-  license: MIT
+  name: ametrine
+  summary: "Ametrine"
+  license: Apache-2
 
 packages:
   #
@@ -31,11 +31,12 @@ packages:
   # The dnf dependency is excluded in the common manifest
   - gdb
   #
-  # Citrine
+  # Ametrine
   #
   - bootc
   # Some people like their X11
   - plasma-workspace-x11
+  - gnome-console
 
 repo-packages:
   - repo: hhd
@@ -60,7 +61,7 @@ exclude-packages:
   # - plasma-x11
   # - plasma-workspace-x11
   #
-  # Citrine
+  # Ametrine
   #
   - ublue-update
 

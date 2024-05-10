@@ -3,7 +3,8 @@
 # infrastructure are run via Pungi in a Koji runroot.
 
 # Set a default for some recipes
-default_variant := "citrine"
+distro := "ametrine"
+default_variant := "ametrine"
 max_layers := "100"
 
 # Comps-sync, but without pulling latest
@@ -88,6 +89,9 @@ compose-image variant=default_variant:
         "citrine")
             variant_pretty="Citrine"
             ;;
+        "ametrine")
+            variant_pretty="Ametrine"
+            ;;
         "*")
             echo "Unknown variant"
             exit 1
@@ -152,7 +156,7 @@ compose-image variant=default_variant:
 
     # Create OCI archive
     ${CMD} compose container-encapsulate \
-        --repo repo citrine/40/x86_64/${variant} \
+        --repo repo {{distro}}/${version}/x86_64/${variant} \
         --max-layers {{max_layers}} ${ARGS} \
         oci-archive:${out_archive}
     
@@ -162,7 +166,7 @@ compose-image variant=default_variant:
     cp ${variant}.prev.manifest.json manifests/${out_fn}.manifest.json
     echo "Wrote image manifest to ${out_fn}.manifest.json"
 
-    rm ${variant}.ociarchive
+    rm -f ${variant}.ociarchive
     ln -s ${out_fn} ${variant}.ociarchive
     
     # This is a combined command and cant reuse metadata etc, is inflexible
@@ -197,6 +201,9 @@ lorax variant=default_variant:
     case "${variant}" in
         "citrine")
             variant_pretty="Citrine"
+            ;;
+        "ametrine")
+            variant_pretty="Ametrine"
             ;;
         "*")
             echo "Unknown variant"
@@ -289,6 +296,9 @@ upload-container variant=default_variant:
     case "${variant}" in
         "citrine")
             variant_pretty="Citrine"
+            ;;
+        "ametrine")
+            variant_pretty="Ametrine"
             ;;
         "*")
             echo "Unknown variant"
