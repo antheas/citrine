@@ -30,6 +30,12 @@ packages:
   # Install gdb to make getting backtraces work with DrKonqi
   # The dnf dependency is excluded in the common manifest
   - gdb
+  #
+  # Citrine
+  #
+  - bootc
+  # Some people like their X11
+  - plasma-workspace-x11
 
 repo-packages:
   - repo: hhd
@@ -59,6 +65,7 @@ exclude-packages:
   - ublue-update
 
 recommends: false
+rpmdb-normalize: True
 
 # Kept in the leaf manifest as they are overwritten by Pungi in composes
 repos:

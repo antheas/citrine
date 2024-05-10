@@ -10,3 +10,4 @@
 /tmp/
 venv
 log*
+/manifests/

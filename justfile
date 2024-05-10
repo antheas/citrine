@@ -4,8 +4,7 @@
 
 # Set a default for some recipes
 default_variant := "citrine"
-# Current default in Pungi
-force_nocache := "false"
+max_layers := "100"
 
 # Comps-sync, but without pulling latest
 sync:
@@ -104,27 +103,73 @@ compose-image variant=default_variant:
     # Set option to reduce fsync for transient builds
     ostree --repo=repo config set 'core.fsync' 'false'
 
-    buildid="$(date '+%Y%m%d.0')"
+    # Find the name of the next ver based on what has been built
+    version="$(rpm-ostree compose tree --print-only --repo=repo ${variant}.yaml | jq -r '."mutate-os-release"')"
+    do=true
+    i=0
+    out_archive=""
+    while $do || [[ -f $out_archive ]]; do
+        do=false
+        buildid="$(date '+%Y%m%d').${i}"
+        out_fn="${variant}.${version}.${buildid}"
+        out_archive="${out_fn}.ociarchive"
+        i=$((i + 1))
+    done
+
     timestamp="$(date --iso-8601=sec)"
     echo "${buildid}" > .buildid
+    echo "--- Composing ${variant_pretty} ${version}.${buildid} to ${out_archive}"
 
-    version="$(rpm-ostree compose tree --print-only --repo=repo ${variant}.yaml | jq -r '."mutate-os-release"')"
-    echo "Composing ${variant_pretty} ${version}.${buildid} ..."
-
-    ARGS="--cachedir=cache --initialize"
-    if [[ {{force_nocache}} == "true" ]]; then
-        ARGS+=" --force-nocache"
+    # Cleanup working dir
+    CMD_RM="rm"
+    if [[ ${EUID} -ne 0 ]]; then
+        CMD_RM="sudo rm"
     fi
+    ${CMD_RM} -rf ./sysroot
+    mkdir -p ./sysroot
+
     # To debug with gdb, use: gdb --args ...
     CMD="rpm-ostree"
     if [[ ${EUID} -ne 0 ]]; then
         CMD="sudo rpm-ostree"
     fi
 
-    ${CMD} compose image ${ARGS} \
-        "${variant}.yaml" \
-        "${variant}.ociarchive"
-        #  --label="quay.expires-after=4w" \
+    # Install the packages
+    ${CMD} compose install \
+        --unified-core --cachedir=cache --repo=repo \
+        ${variant}.yaml ./sysroot
+    ${CMD} compose postprocess \
+        --unified-core \
+        ./sysroot/rootfs ${variant}.yaml
+    ${CMD} compose commit \
+        --repo=./repo --unified-core \
+        ${variant}.yaml ./sysroot/rootfs
+    
+    ARGS=""
+    if [[ -f "${variant}.prev.manifest.json" ]]; then
+        ARGS+="--previous-build-manifest ${variant}.prev.manifest.json"
+    fi
+
+    # Create OCI archive
+    ${CMD} compose container-encapsulate \
+        --repo repo citrine/40/x86_64/${variant} \
+        --max-layers {{max_layers}} ${ARGS} \
+        oci-archive:${out_archive}
+    
+    # Pull manifest
+    skopeo inspect --raw oci-archive:${out_archive} > ${variant}.prev.manifest.json
+    mkdir -p manifests
+    cp ${variant}.prev.manifest.json manifests/${out_fn}.manifest.json
+    echo "Wrote image manifest to ${out_fn}.manifest.json"
+
+    rm ${variant}.ociarchive
+    ln -s ${out_fn} ${variant}.ociarchive
+    
+    # This is a combined command and cant reuse metadata etc, is inflexible
+    # ${CMD} compose image ${ARGS} \
+    #     "${variant}.yaml" \
+    #     "${variant}.ociarchive"
+    #     #  --label="quay.expires-after=4w" \
 
 # Clean up everything
 clean-all:
