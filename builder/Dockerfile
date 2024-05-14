@@ -7,8 +7,9 @@ RUN mkdir -p /sources; \
 WORKDIR /sources/rpm-ostree
 
 COPY 0001-skip-multiple-packages-check-to-avoid-32bit-packages.patch /tmp/patch.patch
+COPY 0001-add-progress-bar-to-container-pulls.patch /tmp/patch2.patch
 
-RUN patch -Np1 < "/tmp/patch.patch"
+RUN patch -Np1 < "/tmp/patch.patch"; patch -Np1 < "/tmp/patch2.patch"
 
 RUN git submodule update --init; \
     ./autogen.sh --prefix=/usr --libdir=/usr/lib64 --sysconfdir=/etc; \
@@ -31,3 +32,5 @@ RUN groupadd admin -g $GID && \
     passwd -d admin && \
     echo "admin ALL=(root) NOPASSWD:ALL" > /etc/sudoers.d/user && \
     chmod 0440 /etc/sudoers.d/user
+
+RUN dnf install -y fedpkg
