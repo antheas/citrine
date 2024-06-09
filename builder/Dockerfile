@@ -12,7 +12,7 @@ RUN git submodule update --init; \
 RUN cargo fetch
 
 COPY 0001-skip-multiple-packages-check-to-avoid-32bit-packages.patch /tmp/patch.patch
-RUN patch -Np1 < "/tmp/patch.patch"; patch -Np1 < "/tmp/patch2.patch"
+RUN patch -Np1 < "/tmp/patch.patch"
 
 RUN make
 
