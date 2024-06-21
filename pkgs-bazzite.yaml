@@ -14,14 +14,14 @@ repo-packages:
   # Steam support
   - repo: bazzite-multilib
     packages:
-      - mesa-filesystem
-      - mesa-libxatracker
-      - mesa-libglapi
-      - mesa-dri-drivers
-      - mesa-libgbm
-      - mesa-libEGL
-      - mesa-vulkan-drivers
-      - mesa-libGL
+      # - mesa-filesystem
+      # - mesa-libxatracker
+      # - mesa-libglapi
+      # - mesa-dri-drivers
+      # - mesa-libgbm
+      # - mesa-libEGL
+      # - mesa-vulkan-drivers
+      # - mesa-libGL
       - pipewire
       - pipewire-alsa
       - pipewire-gstreamer
@@ -156,10 +156,10 @@ packages:
   - wxGTK
   - libFAudio
   # https://bugzilla.redhat.com/show_bug.cgi?id=1974116
-  # - wine-core.x86_64
-  # - wine-core.i686
-  # - wine-pulseaudio.x86_64
-  # - wine-pulseaudio.i686
+  - wine-core.x86_64
+  - wine-core.i686
+  - wine-pulseaudio.x86_64
+  - wine-pulseaudio.i686
   - winetricks
   - protontricks
   - vkBasalt.x86_64
